@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import uuid from "uuid";
 
-const useAxios = (baseUrl, url="") => {
-    const [cards, setCards] = useState([]);
-    const addCard = async () => {
+
+const useAxios = (baseUrl) => {
+    const [responses, setResponses] = useState([]);
+    const addResponseData = async (formatter = data => data, restOfUrl = "") => {
         const response = await axios.get(
-            baseUrl + url
+            `${baseUrl}${restOfUrl}`
         );
-        setCards((cards) => [...cards, { ...response.data, id: uuid() }]);
+        setResponses((data) => [...data, formatter(response.data)]);
     };
 
-    return [cards, addCard]
+    return [responses, addResponseData]
 };
 
 export default useAxios;
